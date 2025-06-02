@@ -1,0 +1,6 @@
+# MindShelf - Personal Link Management System
+User-agent: *
+Allow: /
+
+# Disallow API endpoints
+Disallow: /api/

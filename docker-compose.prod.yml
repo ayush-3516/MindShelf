@@ -5,36 +5,36 @@ services:
     build:
       context: .
       dockerfile: ./docker/api/Dockerfile
-    container_name: mindshelf-api
-    restart: unless-stopped
+    container_name: mindshelf-api-prod
+    restart: always
     environment:
       - SERVER_PORT=8080
-      - MONGO_URI=mongodb+srv://ayushchaudhari3516:msdevpswd@mindshelf-dev.f8eaybl.mongodb.net/?retryWrites=true&w=majority&appName=mindshelf-dev
-      - MONGO_DATABASE=link_manager
-      - JWT_SECRET=${JWT_SECRET:-your-super-secret-key}
+      - MONGO_URI=${MONGO_URI}
+      - MONGO_DATABASE=${MONGO_DATABASE:-link_manager}
+      - JWT_SECRET=${JWT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-    ports:
-      - "8080:8080"
     networks:
-      - mindshelf-network
+      - mindshelf-network-prod
 
   nginx:
     build:
       context: ./docker/nginx
-      dockerfile: Dockerfile
-    container_name: mindshelf-nginx
-    restart: unless-stopped
+      dockerfile: Dockerfile.prod
+    container_name: mindshelf-nginx-prod
+    restart: always
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - api
     networks:
-      - mindshelf-network
+      - mindshelf-network-prod
     volumes:
       - ./public:/usr/share/nginx/html
       - ./docker/nginx/logs:/var/log/nginx
+      - ./docker/nginx/certs:/etc/nginx/ssl
 
 networks:
-  mindshelf-network:
+  mindshelf-network-prod:
     driver: bridge

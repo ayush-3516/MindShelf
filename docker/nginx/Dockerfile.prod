@@ -1,0 +1,18 @@
+FROM nginx:alpine
+
+# Copy custom nginx config
+COPY nginx.prod.conf /etc/nginx/nginx.conf
+
+# Copy SSL certificates
+COPY certs/self-signed.crt /etc/nginx/ssl/server.crt
+COPY certs/self-signed.key /etc/nginx/ssl/server.key
+
+# Copy static files
+COPY ../../public /usr/share/nginx/html
+
+# Expose ports
+EXPOSE 80
+EXPOSE 443
+
+# Command to run
+CMD ["nginx", "-g", "daemon off;"]
